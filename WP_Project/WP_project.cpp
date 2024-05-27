@@ -4,6 +4,7 @@
 HINSTANCE g_hlnst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"Windows program Project";
+HBITMAP hBitmap, hBitmap2;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
@@ -43,12 +44,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	HDC hDC, hMemDC, hDC2, hMemDC2;
 	PAINTSTRUCT ps;
-	HBITMAP hBitmap, oldBitmap, hBitmap2, oldBitmap2;
-	BITMAP bit;
+	HBITMAP oldBitmap, oldBitmap2;
+	BITMAP bit, bit2;
 	RECT rect;
 
 	switch (iMessage) {
 	case WM_CREATE:
+		hBitmap = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
+
 		return 0;
 
 	case WM_PAINT:
@@ -56,23 +59,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		hDC = BeginPaint(hWnd, &ps);
 
 		hMemDC = CreateCompatibleDC(hDC);
+		hMemDC2 = CreateCompatibleDC(hDC);
 
 		GetClientRect(hWnd, &rect);
 
 		int see_bw = rect.right - rect.left;
 		int see_bh = rect.bottom - rect.top;
-
-		hBitmap = (HBITMAP)LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
-		oldBitmap = (HBITMAP)SelectObject(hMemDC, hBitmap);
-
 		int bWidth = rect.right - rect.left, bHeight = rect.bottom - rect.top;
 
+		// VIPÄ­ ºñÆ®¸Ê
+		SelectObject(hMemDC, hBitmap);
 		GetObject(hBitmap, sizeof(BITMAP), &bit);
-
 		StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, 0, 0, bWidth, bHeight, SRCCOPY);
 
-		SelectObject(hMemDC, oldBitmap);
+		// °ËÁ¤»ö ºñÆ®¸Ê
+		SelectObject(hMemDC2, hBitmap2);
+		GetObject(hBitmap2, sizeof(BITMAP), &bit2);
+		StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC2, 0, 0, bWidth, bHeight, BLACKNESS);
+		
 		DeleteDC(hMemDC);
+		DeleteDC(hMemDC2);
 
 		EndPaint(hWnd, &ps);
 		break;

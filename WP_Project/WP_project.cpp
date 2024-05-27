@@ -76,7 +76,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		SelectObject(hMemDC2, hBitmap2);
 		GetObject(hBitmap2, sizeof(BITMAP), &bit2);
 		StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC2, 0, 0, bWidth, bHeight, BLACKNESS);
-		
+
+		int ellipse1 = see_bw / 10, ellipse2 = see_bh / 10, ellipse3 = ellipse1 + 300, ellipse4 = ellipse2 + 300;
+
+		// 흰색 원 그리기
+		HBRUSH hBrush = CreateSolidBrush(RGB(255, 255, 255));
+		HBRUSH oldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+		Ellipse(hDC, ellipse1, ellipse2, ellipse3, ellipse4);
+		SelectObject(hDC, oldBrush);
+		DeleteObject(hBrush);
+
 		DeleteDC(hMemDC);
 		DeleteDC(hMemDC2);
 

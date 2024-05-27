@@ -1,6 +1,10 @@
 #include <windows.h>
 #include "resource.h"
 
+int ballX, ballY;
+
+void DrawBall(HDC hdc);
+
 HINSTANCE g_hlnst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"Windows program Project";
@@ -48,6 +52,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	BITMAP bit, bit2;
 	RECT rect;
 
+	ballX = 100; ballY = 390;
+
 	switch (iMessage) {
 	case WM_CREATE:
 		hBitmap = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
@@ -89,6 +95,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		DeleteDC(hMemDC);
 		DeleteDC(hMemDC2);
 
+		DrawBall(hDC);
+
 		EndPaint(hWnd, &ps);
 		break;
 	}
@@ -106,4 +114,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 	}
 	return DefWindowProc(hWnd, iMessage, wParam, lParam);
+}
+
+void DrawBall(HDC hdc)
+{
+	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+	Ellipse(hdc, ballX, ballY, ballX + 50, ballY + 50);
+	SelectObject(hdc, hOldBrush);
+	DeleteObject(hBrush);
 }

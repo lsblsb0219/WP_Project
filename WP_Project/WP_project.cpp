@@ -3,7 +3,10 @@
 
 #pragma comment(lib, "Msimg32.lib")
 
-int ballX, ballY;
+RECT rect;
+
+int ballX, ballY, ballX2, ballY2, ellipseX, ellipseY, ellipseX2, ellipseY2;
+int see_bw, see_bh, bWidth, bHeight, bWidth2, bHeight2;
 
 void DrawBall(HDC hdc);
 
@@ -11,6 +14,7 @@ HINSTANCE g_hlnst;
 LPCTSTR lpszClass = L"Window Class Name";
 LPCTSTR lpszWindowName = L"Windows program Project";
 HBITMAP hBitmap, hBitmap2;
+BITMAP bit, bit2;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
@@ -51,16 +55,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
     HDC hDC, hMemDC, hMemDC2;
     PAINTSTRUCT ps;
     HBITMAP oldBitmap, oldBitmap2;
-    BITMAP bit, bit2;
-    RECT rect;
-
-    ballX = 120; ballY = 390;
 
     switch (iMessage) {
     case WM_CREATE:
+        GetClientRect(hWnd, &rect);
+
         hBitmap = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
         hBitmap2 = CreateCompatibleBitmap(GetDC(hWnd), 1300, 840);
-        return 0;
+
+        // 원과 (주인)공 크기 크기 및 위치 설정
+        ellipseX = 0, ellipseY = 270;
+        ballX = 120; ballY = 390;
+
+        // 비트맵 복사 크기
+        bWidth = rect.left, bHeight = rect.top;
+        bWidth2 = rect.right - rect.left, bHeight2 = rect.bottom - rect.top;
+
+        // VIP 비트맵의 너비 정보를 얻음
+        GetObject(hBitmap, sizeof(BITMAP), &bit);
+
+        break;
 
     case WM_PAINT:
     {
@@ -71,14 +85,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
         GetClientRect(hWnd, &rect);
 
-        int see_bw = rect.right - rect.left;
-        int see_bh = rect.bottom - rect.top;
-        int bWidth = rect.right - rect.left, bHeight = rect.bottom - rect.top;
+        // 비트맵 복사 크기
+        see_bw = rect.right - rect.left, see_bh = rect.bottom - rect.top;
 
         // VIP칸 비트맵
         SelectObject(hMemDC, hBitmap);
-        GetObject(hBitmap, sizeof(BITMAP), &bit);
-        StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, 0, 0, bWidth, bHeight, SRCCOPY);
+        StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, bWidth, bHeight, bWidth2, bHeight2, SRCCOPY);
 
         // 검정색 비트맵 준비
         SelectObject(hMemDC2, hBitmap2);
@@ -87,16 +99,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         FillRect(hMemDC2, &blackRect, blackBrush);
         DeleteObject(blackBrush);
 
-        // 원 크기 크기 및 위치 설정
-        int ellipse1 = 0, ellipse2 = 270, ellipse3 = ellipse1 + 300, ellipse4 = ellipse2 + 300;
-
         // 검정색 비트맵을 원 부분을 제외한 나머지에만 그리기
         BitBlt(hDC, 0, 0, see_bw, see_bh, hMemDC2, 0, 0, SRCCOPY); // 전체를 검정색으로 채움
 
-        // 원 부분만 제외하기
-        HRGN hRgn = CreateEllipticRgn(ellipse1, ellipse2, ellipse3, ellipse4);
+        // 흰색 원 그리기
+        ellipseX2 = ellipseX + 300, ellipseY2 = ellipseY + 300;
+        HRGN hRgn = CreateEllipticRgn(ellipseX, ellipseY, ellipseX2, ellipseY2);
         SelectClipRgn(hDC, hRgn);
-        BitBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, 0, 0, SRCCOPY); // VIP 비트맵을 원 부분에만 덮어 씀
+        StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, bWidth, bHeight, bWidth2, bHeight2, SRCCOPY); // VIP 비트맵을 원 부분에만 덮어 씀
         SelectClipRgn(hDC, NULL);
         DeleteObject(hRgn);
 
@@ -105,7 +115,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         HPEN oldPen = (HPEN)SelectObject(hDC, hPen);
         HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(NULL_BRUSH)); // 내부를 비우는 브러시
 
-        Ellipse(hDC, ellipse1, ellipse2, ellipse3, ellipse4);
+        Ellipse(hDC, ellipseX, ellipseY, ellipseX2, ellipseY2);
 
         SelectObject(hDC, hOldBrush);
         SelectObject(hDC, oldPen);
@@ -119,6 +129,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         EndPaint(hWnd, &ps);
         break;
     }
+
+    case WM_KEYDOWN:
+		switch (wParam) {
+		case VK_LEFT:
+			if (ballX >= rect.left) {
+				ballX -= 10;
+				ellipseX -= 10;
+			}
+			break;
+		case VK_RIGHT:
+			if (ballX2 <= rect.right && ballX2 <= rect.right / 2) {
+				ballX += 10;
+				ellipseX += 10;
+			}
+            else if (ballX2 >= rect.right / 2 && bWidth2 <= bit.bmWidth) {
+                bWidth += 10;
+                bWidth2 += 10;
+            }
+			break;
+		case VK_UP:
+			if (ballY >= rect.top) {
+				ballY -= 10;
+				ellipseY -= 10;
+			}
+			break;
+		case VK_DOWN:
+			if (ballY2 <= rect.bottom) {
+				ballY += 10;
+				ellipseY += 10;
+			}
+			break;
+		}
+        InvalidateRect(hWnd, NULL, TRUE);
+        break;
 
     case WM_CHAR:
         switch (wParam) {
@@ -138,7 +182,8 @@ void DrawBall(HDC hdc)
 {
     HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
-    Ellipse(hdc, ballX, ballY, ballX + 50, ballY + 50);
+    ballX2 = ballX + 50, ballY2 = ballY + 50;
+    Ellipse(hdc, ballX, ballY, ballX2, ballY2);
     SelectObject(hdc, hOldBrush);
     DeleteObject(hBrush);
 }

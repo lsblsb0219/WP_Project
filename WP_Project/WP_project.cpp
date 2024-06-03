@@ -91,7 +91,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rect);
 
 		// ºñÆ®¸Ê º¹»ç Å©±â
-		see_bw = rect.right - rect.left, see_bh = rect.bottom - rect.top;
+		see_bw = rect.right - rect.left, see_bh = rect.bottom - rect.top;	// 1300 800
 
 		// VIPÄ­ ºñÆ®¸Ê
 		SelectObject(hMemDC, hBitmap[currentBitmapIndex]);
@@ -152,29 +152,69 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		case VK_RIGHT:
-			if (ballX2 <= rect.right && ballX2 <= rect.right / 2) {
-				ballX += 10;
-				ellipseX += 10;
+			if (currentBitmapIndex == 0 || currentBitmapIndex == 2) {
+				if (ballX2 <= rect.right && ballX2 <= rect.right / 2) {
+					ballX += 10;
+					ellipseX += 10;
+				}
+				else if (ballX2 <= rect.right && bWidth2 >= 2130) {
+					ballX += 10;
+					ellipseX += 10;
+				}
+				else if (ballX2 >= rect.right / 2 && bWidth2 < 2130) {
+					bWidth += 10;
+					bWidth2 += 10;
+				}
 			}
-			else if (ballX2 <= rect.right && bWidth2 >= 2130) {
-				ballX += 10;
-				ellipseX += 10;
-			}
-			else if (ballX2 >= rect.right / 2 && bWidth2 < 2130) {
-				bWidth += 10;
-				bWidth2 += 10;
+			else {
+				if (ballX2 <= rect.right && ballX2 <= rect.right / 2) {
+					ballX += 10;
+					ellipseX += 10;
+				}
+				else if (ballX2 <= rect.right && bWidth2 >= 2130) {
+					ballX += 10;
+					ellipseX += 10;
+				}
+				else if (ballX2 >= rect.right / 2 && bWidth2 < 2130) {
+					bWidth += 10;
+					bWidth2 += 10;
+				}
 			}
 			break;
 		case VK_UP:
-			if (ballY >= rect.top) {
-				ballY -= 10;
-				ellipseY -= 10;
+			if (currentBitmapIndex == 0 || currentBitmapIndex == 2) {
+				if (ballY >= rect.top) {
+					ballY -= 10;
+					ellipseY -= 10;
+				}
+			}
+			else {
+				if (ballY > rect.top && bHeight > 0) {
+					ballY -= 10;
+					ellipseY -= 10;
+				}
+				else if (ballY <= rect.top && bHeight <= 0) {
+					bHeight -= 10;
+					bHeight2 -= 10;
+				}
 			}
 			break;
 		case VK_DOWN:
-			if (ballY2 <= rect.bottom) {
-				ballY += 10;
-				ellipseY += 10;
+			if (currentBitmapIndex == 0 || currentBitmapIndex == 2) {
+				if (ballY2 <= rect.bottom) {
+					ballY += 10;
+					ellipseY += 10;
+				}
+			}
+			else {
+				if (ballY2 < rect.bottom && bHeight2 < 1400) {
+					ballY += 10;
+					ellipseY += 10;
+				}
+				else if (ballY2 >= rect.bottom && bHeight2 >= 1400) {
+					bHeight += 10;
+					bHeight2 += 10;
+				}
 			}
 			break;
 		}
@@ -186,10 +226,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		case 'f':
 			if (ballX2 >= rect.right && currentBitmapIndex < 4) {
 				currentBitmapIndex += 1;
-				ellipseX = 0;
-				ellipseY = 270;
-				ballX = 120;
-				ballY = 390;
+				ellipseX = 0; ellipseY = 270;
+				ballX = 120; ballY = 390;
+				bWidth = 0; bWidth2 = 1300;
 				InvalidateRect(hWnd, NULL, TRUE);
 			}
 			break;

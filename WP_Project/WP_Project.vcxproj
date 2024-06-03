@@ -131,16 +131,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="WP_project_h.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WP_Project.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\바닥.bmp" />
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\식당칸.bmp" />
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\일반칸.bmp" />
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\좌석칸.bmp" />
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\바닥.bmp" />
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\식당칸.bmp" />
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\일반칸.bmp" />
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\좌석칸.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

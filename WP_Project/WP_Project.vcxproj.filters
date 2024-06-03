@@ -20,9 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WP_project_h.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -33,16 +30,16 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\바닥.bmp">
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\바닥.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\식당칸.bmp">
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\식당칸.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\일반칸.bmp">
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\일반칸.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\..\..\..\OneDrive\문서\카카오톡 받은 파일\좌석칸.bmp">
+    <Image Include="..\..\..\..\..\..\대학교\2학년 1학기\윈도우 프로그래밍\사진\좌석칸.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -224,12 +224,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		switch (wParam) {
 		case 'f':
-			if (ballX2 >= rect.right && currentBitmapIndex < 4) {
+			if (ballX2 >= rect.right && currentBitmapIndex + 1 < 4) {
 				currentBitmapIndex += 1;
 				ellipseX = 0; ellipseY = 270;
 				ballX = 120; ballY = 390;
 				bWidth = 0; bWidth2 = 1300;
 				InvalidateRect(hWnd, NULL, TRUE);
+			}
+			else if (ballX <= rect.left && currentBitmapIndex - 1 > -1) {
+				
 			}
 			break;
 		case 'q':

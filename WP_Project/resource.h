@@ -6,6 +6,7 @@
 #define ID_Roomfloor                    103
 #define ID_Normalfloor                  104
 #define ID_Restaurant                   65535
+#define ID_Res                          65535
 
 // Next default values for new objects
 // 

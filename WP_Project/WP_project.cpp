@@ -282,5 +282,5 @@ void BACK_DrawMessageBox(HDC hdc)
 
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, RGB(0, 0, 0)); // 검정색 텍스트
-    DrawText(hdc, L"문이 잠겨있다", -1, &messageBoxRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    DrawText(hdc, L"문이 잠겨있다. 다시 돌아갈 수 없는 것 같다.          ( 창닫기 F )", -1, &messageBoxRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }

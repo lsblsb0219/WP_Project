@@ -6,6 +6,8 @@
 #define ID_Roomfloor                    103
 #define ID_Normalfloor                  104
 #define IDR_MENU1                       111
+#define IDB_PNG1                        113
+#define IDB_Gun                         113
 #define ID_HELP_40001                   40001
 #define ID_HELP_40002                   40002
 #define ID_HELP_40003                   40003
@@ -20,7 +22,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        112
+#define _APS_NEXT_RESOURCE_VALUE        114
 #define _APS_NEXT_COMMAND_VALUE         40007
 #define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           101

@@ -10,6 +10,8 @@ bool showMessageBox;
 bool showMessage = false; // 메시지를 표시할지 여부
 LPCWSTR message;
 UINT_PTR messageTimerID = 1; // 타이머 ID
+
+// 스캔
 bool showScanEllipse = false; // 스캔 원을 표시할지 여부
 UINT_PTR Scan_ellipse = 2;
 int size_cheack; // 스캔 원 크기 제한 확인
@@ -28,7 +30,6 @@ void DrawMessageBox(HDC hdc, LPCWSTR message);
 void DrawScanEllipse(HDC hdc);
 void DrawEnemy(HDC hdc);
 void DrawHealth(HDC hdc);
-void BACK_DrawMessageBox(HDC hdc, LPCWSTR message);
 bool CheckCollision();
 
 HINSTANCE g_hlnst;
@@ -187,7 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		DrawBall(hDC);
 
 		if (showMessageBox) {
-			BACK_DrawMessageBox(hDC, message);
+			DrawMessageBox(hDC, message);
 		}
 
 		if (enemyActive && currentBitmapIndex == 1) { // 적이 두 번째 맵에서만 나타나도록
@@ -499,7 +500,6 @@ void DrawHealth(HDC hdc) {
 bool CheckCollision() {
 	return ballX2 > enemyX && ballX < enemyX + enemyWidth &&
 		ballY2 > enemyY && ballY < enemyY + enemyHeight;
-}
 }
 
 void DrawScanEllipse(HDC hdc)

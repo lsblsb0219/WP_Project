@@ -38,7 +38,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE gPreblnstance, LPSTR lpszCmdPa
     WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     WndClass.hCursor = LoadCursor(NULL, IDC_HAND);
     WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    WndClass.lpszMenuName = NULL;
+
+	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1); //--- 메뉴 id 등록
+
     WndClass.lpszClassName = lpszClass;
     WndClass.hIconSm = LoadIcon(NULL, IDI_QUESTION);
     RegisterClassEx(&WndClass);

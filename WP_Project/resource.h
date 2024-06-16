@@ -5,15 +5,23 @@
 #define ID_VIPfloor                     2
 #define ID_Roomfloor                    103
 #define ID_Normalfloor                  104
+#define IDR_MENU1                       111
+#define ID_HELP_40001                   40001
+#define ID_HELP_40002                   40002
+#define ID_HELP_40003                   40003
+#define ID_HELP_40004                   40004
+#define ID_HELP_40005                   40005
+#define ID_HELP_40006                   40006
 #define ID_Restaurant                   65535
 #define ID_Res                          65535
+#define ID_Restaurantfloor              65535
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_RESOURCE_VALUE        112
+#define _APS_NEXT_COMMAND_VALUE         40007
 #define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -8,10 +8,11 @@ int see_bw, see_bh, bWidth, bHeight, bWidth2, bHeight2;
 int currentBitmapIndex = 0;
 bool showMessageBox ;
 bool showMessage = false; // 메시지를 표시할지 여부
+LPCWSTR message;
 UINT_PTR messageTimerID = 1; // 타이머 ID
 
 void DrawBall(HDC hdc);
-void BACK_DrawMessageBox(HDC hdc);
+void BACK_DrawMessageBox(HDC hdc, LPCWSTR message);
 
 HINSTANCE g_hlnst;
 LPCTSTR lpszClass = L"Window Class Name";
@@ -129,7 +130,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		 
 		// Draw the message if needed
 		if (showMessage) {
-			LPCTSTR message = L"더이상 나아갈수 없다.";
+			message = L"더이상 나아갈수 없다.";
 			SetTextColor(hDC, RGB(255, 0, 0));
 			SetBkMode(hDC, TRANSPARENT);
 			SIZE size;
@@ -143,7 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         DrawBall(hDC);
 
         if (showMessageBox) {
-            BACK_DrawMessageBox(hDC);
+            BACK_DrawMessageBox(hDC, message);
         }
 
         EndPaint(hWnd, &ps);
@@ -262,6 +263,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			}
 			else if (ballX <= rect.left && currentBitmapIndex - 1 > -1) {
 				if (showMessageBox == false) {
+					message = L"문이 잠겨있다. 다시 돌아갈 수 없는 것 같다.          ( 창닫기 F )";
 					showMessageBox = true; // 메시지 박스 활성화
 				}
 				else {
@@ -300,7 +302,7 @@ void DrawBall(HDC hdc)
     DeleteObject(hBrush);
 }
 
-void BACK_DrawMessageBox(HDC hdc)
+void BACK_DrawMessageBox(HDC hdc, LPCWSTR message)
 {
     RECT messageBoxRect;
     messageBoxRect.left = 10;
@@ -314,5 +316,5 @@ void BACK_DrawMessageBox(HDC hdc)
 
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, RGB(0, 0, 0)); // 검정색 텍스트
-    DrawText(hdc, L"문이 잠겨있다. 다시 돌아갈 수 없는 것 같다.          ( 창닫기 F )", -1, &messageBoxRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    DrawText(hdc, message, -1, &messageBoxRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }

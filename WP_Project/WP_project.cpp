@@ -6,7 +6,9 @@ RECT rect;
 int ballX, ballY, ballX2, ballY2, ellipseX, ellipseY, ellipseX2, ellipseY2;
 int see_bw, see_bh, bWidth, bHeight, bWidth2, bHeight2;
 int currentBitmapIndex = 0;
-bool isKeyPressed;
+bool showMessageBox ;
+bool showMessage = false; // 메시지를 표시할지 여부
+UINT_PTR messageTimerID = 1; // 타이머 ID
 
 void DrawBall(HDC hdc);
 void BACK_DrawMessageBox(HDC hdc);
@@ -92,7 +94,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         // 비트맵 복사 크기
         see_bw = rect.right - rect.left, see_bh = rect.bottom - rect.top;    // 1300 800
 
-		// VIP칸 비트맵
+		// 비트맵 불러오기
 		SelectObject(hMemDC, hBitmap[currentBitmapIndex]);
 		StretchBlt(hDC, 0, 0, see_bw, see_bh, hMemDC, bWidth, bHeight, bWidth2, bHeight2, SRCCOPY);
 
@@ -124,6 +126,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         SelectObject(hDC, hOldBrush);
         SelectObject(hDC, oldPen);
         DeleteObject(hPen);
+		 
+		// Draw the message if needed
+		if (showMessage) {
+			LPCTSTR message = L"더이상 나아갈수 없다.";
+			SetTextColor(hDC, RGB(255, 0, 0));
+			SetBkMode(hDC, TRANSPARENT);
+			SIZE size;
+			GetTextExtentPoint32(hDC, message, lstrlen(message), &size);
+			TextOut(hDC, (rect.right - size.cx) / 2, rect.bottom - size.cy - 10, message, lstrlen(message));
+		}
 
 		DeleteDC(hMemDC);
 		DeleteDC(hMemDC2);
@@ -192,11 +204,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			else {
-				if (ballY > rect.top && bHeight > 0) {
+				if (ballY > rect.top && bHeight >= 0) {
 					ballY -= 10;
 					ellipseY -= 10;
 				}
-				else if (ballY <= rect.top && bHeight <= 0) {
+				else if (ballY == rect.top && bHeight > 0) {
 					bHeight -= 10;
 					bHeight2 -= 10;
 				}
@@ -210,13 +222,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			else {
-				if (ballY2 < rect.bottom && bHeight2 < 1400) {
+				if (ballY2 < rect.bottom && bHeight2 <= 1200) {
 					ballY += 10;
 					ellipseY += 10;
 				}
-				else if (ballY2 >= rect.bottom && bHeight2 >= 1400) {
-					bHeight += 10;
-					bHeight2 += 10;
+				else if (ballY2 >= rect.bottom) {
+					if (bHeight2 < 1200) {
+						bHeight += 10;
+						bHeight2 += 10;
+					}
 				}
 			}
 			break;
@@ -227,17 +241,45 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		switch (wParam) {
 		case 'f':
-			if (ballX2 >= rect.right && currentBitmapIndex < 4) {
+			if (ballX2 >= rect.right && currentBitmapIndex <= 2) {
 				currentBitmapIndex += 1;
 				ellipseX = 0; ellipseY = 270;
 				ballX = 120; ballY = 390;
 				bWidth = 0; bWidth2 = 1300;
+
+				if (currentBitmapIndex == 1 || currentBitmapIndex == 3) {
+					bHeight = 250; bHeight2 = 1050;
+				}
+				else {
+					bHeight = 0; bHeight2 = 800;
+				}
+
+				InvalidateRect(hWnd, NULL, TRUE);
+			}
+			else if (ballX2 >= rect.right && currentBitmapIndex == 3) {
+				showMessage = true;
+				SetTimer(hWnd, messageTimerID, 3000, NULL);
+			}
+			else if (ballX <= rect.left && currentBitmapIndex - 1 > -1) {
+				if (showMessageBox == false) {
+					showMessageBox = true; // 메시지 박스 활성화
+				}
+				else {
+					showMessageBox = false;
+				}
 				InvalidateRect(hWnd, NULL, TRUE);
 			}
 			break;
 		case 'q':
 			PostQuitMessage(0);
 			break;
+		}
+		break;
+	case WM_TIMER:
+		if (wParam == messageTimerID) {
+			showMessage = false;
+			KillTimer(hWnd, messageTimerID);
+			InvalidateRect(hWnd, NULL, TRUE);
 		}
 		break;
 

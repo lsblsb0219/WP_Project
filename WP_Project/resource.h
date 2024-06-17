@@ -16,6 +16,8 @@
 #define ID_HELP_40006                   40006
 #define ID_40007                        40007
 #define ID_40008                        40008
+#define ID_40009                        40009
+#define ID_40010                        40010
 #define ID_Restaurant                   65535
 #define ID_Res                          65535
 #define ID_Restaurantfloor              65535
@@ -25,7 +27,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        114
-#define _APS_NEXT_COMMAND_VALUE         40009
+#define _APS_NEXT_COMMAND_VALUE         40011
 #define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

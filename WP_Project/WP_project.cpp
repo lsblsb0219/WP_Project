@@ -26,6 +26,8 @@ UINT_PTR messageTimerID = 1; // 타이머 ID
 bool showScanEllipse = false; // 스캔 원을 표시할지 여부
 UINT_PTR Scan_ellipse = 2;
 int size_cheack; // 스캔 원 크기 제한 확인
+
+
 UINT_PTR respawnTimerID = 3; // 적 재등장을 위한 타이머 ID
 UINT_PTR gameOverTimerID = 4; // 게임 오버 후 재시작을 위한 타이머 ID
 
@@ -159,11 +161,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		enemy2X = rect.right - enemy2Width;
 		enemy2Y = ballY + 100; // 주인공의 Y 위치에 맞춰 초기화
 
-		// 총 이미지 로드
-		hGunBitmap = (HBITMAP)LoadImage(g_hlnst, MAKEINTRESOURCE(IDB_Gun), IMAGE_BITMAP, 0, 0, 0);
-		GetObject(hGunBitmap, sizeof(BITMAP), &bitGun);
-
-		size_cheack = 0;
+        size_cheack = 0;
 
 		break;
 
@@ -206,28 +204,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			DrawScanEllipse(hDC);
 		}
 
-		// 총 이미지 그리기
-		if (currentBitmapIndex == 0) {
-			int gunX = (rect.right - bitGun.bmWidth) / 2;
-			int gunY = (rect.bottom - bitGun.bmHeight) / 2;
-
-			BitBlt(hDC, gunX, gunY, bitGun.bmWidth, bitGun.bmHeight, hMemDC, 0, 0, SRCCOPY);
-
-			// 원과 총 이미지가 겹치면 파란색 테두리 그리기
-			if (ellipseX2 > gunX && ellipseX < gunX + bitGun.bmWidth && ellipseY2 > gunY && ellipseY < gunY + bitGun.bmHeight) {
-				HPEN hPen = CreatePen(PS_SOLID, 3, RGB(0, 0, 255));
-				HPEN oldPen = (HPEN)SelectObject(hDC, hPen);
-				HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(NULL_BRUSH));
-
-				Rectangle(hDC, gunX, gunY, gunX + bitGun.bmWidth, gunY + bitGun.bmHeight);
-
-				SelectObject(hDC, hOldBrush);
-				SelectObject(hDC, oldPen);
-				DeleteObject(hPen);
-			}
-		}
-
-		// Draw the message if needed
+		// 메시지 출력
 		if (showMessage) {
 			message = L"더이상 나아갈수 없다.";
 			SetTextColor(hDC, RGB(255, 0, 0));

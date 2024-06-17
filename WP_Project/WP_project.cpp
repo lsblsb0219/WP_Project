@@ -1,5 +1,15 @@
 #include <windows.h>
 #include "resource.h"
+#include "fmod.hpp"
+#include "fmod_errors.h"
+
+#pragma comment (lib, "fmod_vc.lib")
+
+FMOD::System* ssystem;
+FMOD_RESULT result;
+FMOD::Sound* rain_sound;
+void* extradriverdata = 0;
+FMOD::Channel* channel = 0;
 
 RECT rect;
 
@@ -92,12 +102,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
     switch (iMessage) {
     case WM_CREATE:
         GetClientRect(hWnd, &rect);
+	switch (iMessage) {
+	case WM_CREATE:
+		GetClientRect(hWnd, &rect);
+		result = FMOD::System_Create(&ssystem);
 
-        hBitmap[0] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
-        hBitmap[1] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Restaurant));
-        hBitmap[2] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Roomfloor));
-        hBitmap[3] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Normalfloor));
-        hBitmap2 = CreateCompatibleBitmap(GetDC(hWnd), 1300, 840);
+		if (result != FMOD_OK)
+			exit(0);
+		ssystem->init(32, FMOD_INIT_NORMAL, extradriverdata); //--- 사운드 시스템 초기화
+		ssystem->createSound("rain.mp3", FMOD_LOOP_NORMAL, 0, &rain_sound); //--- 1번 사운드 생성 및 설정
+
+		channel->stop();
+		ssystem->playSound(rain_sound, 0, false, &channel); //--- 1번 사운드 재생
+
+		hBitmap[0] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
+		hBitmap[1] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Restaurant));
+		hBitmap[2] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Roomfloor));
+		hBitmap[3] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Normalfloor));
+		hBitmap2 = CreateCompatibleBitmap(GetDC(hWnd), 1300, 840);
 
         // 초기 위치 설정
         ellipseX = 0, ellipseY = 270;

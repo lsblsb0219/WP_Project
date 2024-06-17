@@ -1,5 +1,15 @@
 #include <windows.h>
 #include "resource.h"
+#include "fmod.hpp"
+#include "fmod_errors.h"
+
+#pragma comment (lib, "fmod_vc.lib")
+
+FMOD::System* ssystem;
+FMOD_RESULT result;
+FMOD::Sound* rain_sound;
+void* extradriverdata = 0;
+FMOD::Channel* channel = 0;
 
 RECT rect;
 
@@ -82,6 +92,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 	case WM_CREATE:
 		GetClientRect(hWnd, &rect);
+		result = FMOD::System_Create(&ssystem);
+
+		if (result != FMOD_OK)
+			exit(0);
+		ssystem->init(32, FMOD_INIT_NORMAL, extradriverdata); //--- 사운드 시스템 초기화
+		ssystem->createSound("rain.mp3", FMOD_LOOP_NORMAL, 0, &rain_sound); //--- 1번 사운드 생성 및 설정
+
+		channel->stop();
+		ssystem->playSound(rain_sound, 0, false, &channel); //--- 1번 사운드 재생
 
 		hBitmap[0] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_VIPfloor));
 		hBitmap[1] = LoadBitmap(g_hlnst, MAKEINTRESOURCE(ID_Restaurant));
@@ -294,20 +313,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		}
-		if (CheckCollision() && enemyActive) {
-			playerHealth--;
-			enemyActive = false;
-			KillTimer(hWnd, enemyTimerID);
-			if (playerHealth <= 0) {
-				// 게임 오버 처리
-				MessageBox(hWnd, L"게임 오버", L"알림", MB_OK);
-				PostQuitMessage(0);
-			}
-			else {
-				// 5초 후에 적 재등장
-				SetTimer(hWnd, respawnTimerID, 5000, NULL);
-			}
-		}
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 
@@ -400,7 +405,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 				playerHealth--;
 				enemyActive = false;
 				KillTimer(hWnd, enemyTimerID);
-				if (playerHealth <= 0) {
+				if (playerHealth == 0) {
 					// 게임 오버 처리
 					MessageBox(hWnd, L"게임 오버", L"알림", MB_OK);
 					PostQuitMessage(0);

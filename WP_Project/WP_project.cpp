@@ -102,9 +102,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
     switch (iMessage) {
     case WM_CREATE:
         GetClientRect(hWnd, &rect);
-	switch (iMessage) {
-	case WM_CREATE:
-		GetClientRect(hWnd, &rect);
 		result = FMOD::System_Create(&ssystem);
 
 		if (result != FMOD_OK)

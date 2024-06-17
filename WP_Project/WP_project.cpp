@@ -143,10 +143,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
         enemy2X = rect.right - enemy2Width;
         enemy2Y = ballY + 100; // 주인공의 Y 위치에 맞춰 초기화
 
-        // 총 이미지 로드
-        hGunBitmap = (HBITMAP)LoadImage(g_hlnst, MAKEINTRESOURCE(IDB_Gun), IMAGE_BITMAP, 0, 0, 0);
-        GetObject(hGunBitmap, sizeof(BITMAP), &bitGun);
-
         size_cheack = 0;
 
         break;
